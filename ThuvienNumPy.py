@@ -61,7 +61,7 @@ def forecast_weather(city, country, days):
     return df
     
 def plot_temperature(data):
-    # Vẽ biểu đồ nhiệt độ theo thời gian
+    # Vẽ biểu đồ nhiệt độ theo thời gia
     global fig, canvas  # Khai báo fig và canvas global
     fig.clf()  # Xóa biểu đồ cũ
     # Vẽ biểu đồ nhiệt độ theo thời gian
