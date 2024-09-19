@@ -109,12 +109,6 @@ country_label.grid(row=1, column=0, padx=5, pady=5)
 country_entry = Entry(window)
 country_entry.grid(row=1, column=1, padx=5, pady=5)
 
-# # Tạo nhãn và ô nhập cho số ngày
-# days_label = Label(window, text="Số ngày:")
-# days_label.grid(row=2, column=0, padx=5, pady=5)
-# days_entry = Entry(window)
-# days_entry.grid(row=2, column=1, padx=5, pady=5)
-
 # Tạo nút "Dự báo"
 get_forecast_button = Button(window, text="Dự báo", command=get_forecast)
 get_forecast_button.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
