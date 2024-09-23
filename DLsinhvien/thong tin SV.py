@@ -35,6 +35,28 @@ def calculate_average(data, student_id):
         average_grade = np.mean(grades)
         print(f"Trung bình cộng điểm của sinh viên có ID {student_id} là {average_grade:.2f}.")
 
+def statistics_by_class(data):
+    """Thống kê điểm theo lớp."""
+
+    subject_name = input("Nhập tên môn học muốn thống kê: ")
+
+    subject_data = data[data[:, 2] == subject_name]
+    if subject_data.size == 0:
+        print(f"Không tìm thấy điểm cho môn học {subject_name}.")
+        return
+
+    grades = subject_data[:, 3].astype(float)
+    average_grade = np.mean(grades)
+    max_grade = np.max(grades)
+    min_grade = np.min(grades)
+
+    print(f"--- Thống kê điểm môn {subject_name} ---")
+    print(f"Điểm trung bình: {average_grade:.2f}")
+    print(f"Điểm cao nhất: {max_grade}")
+    print(f"Điểm thấp nhất: {min_grade}")
+    # ... (thêm code phân loại điểm nếu cần) ...
+
+
 def main():
     file_path = 'data.csv'  # Đặt đường dẫn đến file dữ liệu của bạn
     data = load_data(file_path)
@@ -43,7 +65,8 @@ def main():
         print("\n1. Tìm kiếm thông tin sinh viên")
         print("2. Tìm kiếm điểm môn học")
         print("3. Tính TBC điểm của sinh viên")
-        print("4. Thoát")
+        print("4. Thống kê điểm theo lớp") # Thêm lựa chọn mới
+        print("5. Thoát")
 
         choice = input("Chọn tùy chọn: ")
 
@@ -56,7 +79,9 @@ def main():
         elif choice == '3':
             student_id = input("Nhập ID sinh viên: ")
             calculate_average(data, student_id)
-        elif choice == '4':
+        elif choice == '4': # Gọi hàm thống kê
+            statistics_by_class(data)
+        elif choice == '5':
             break
         else:
             print("Lựa chọn không hợp lệ. Vui lòng chọn lại.")

@@ -70,6 +70,31 @@ def search_action():
 
     messagebox.showinfo("Kết quả", result)
 
+def statistics_by_class(data):
+    """Thống kê điểm theo lớp."""
+
+    subject_name = simpledialog.askstring("Thống kê", "Nhập tên môn học muốn thống kê:")
+    if subject_name is None:
+        return # Người dùng nhấn Cancel
+
+    subject_data = data[data[:, 2] == subject_name]
+    if subject_data.size == 0:
+        messagebox.showinfo("Kết quả", f"Không tìm thấy điểm cho môn học {subject_name}.")
+        return
+
+    grades = subject_data[:, 3].astype(float)
+    average_grade = np.mean(grades)
+    max_grade = np.max(grades)
+    min_grade = np.min(grades)
+
+    result = f"--- Thống kê điểm môn {subject_name} ---\n"
+    result += f"Điểm trung bình: {average_grade:.2f}\n"
+    result += f"Điểm cao nhất: {max_grade}\n"
+    result += f"Điểm thấp nhất: {min_grade}"
+    # ... (thêm kết quả phân loại điểm nếu cần) ...
+
+    messagebox.showinfo("Kết quả", result)
+
 
 def main():
     global data
@@ -101,6 +126,7 @@ def main():
     subject_entry.pack(pady=5)
 
     tk.Button(root, text="Tìm kiếm", command=search_action).pack(pady=10)
+    tk.Button(root, text="Thống kê điểm theo lớp", command=lambda: statistics_by_class(data)).pack(pady=10) # Thêm nút bấm
 
     root.mainloop()
 
