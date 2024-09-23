@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 import tkinter as tk
 from tkinter import messagebox, simpledialog
@@ -70,12 +71,13 @@ def search_action():
 
     messagebox.showinfo("Kết quả", result)
 
+
 def statistics_by_class(data):
     """Thống kê điểm theo lớp."""
 
     subject_name = simpledialog.askstring("Thống kê", "Nhập tên môn học muốn thống kê:")
     if subject_name is None:
-        return # Người dùng nhấn Cancel
+        return  # Người dùng nhấn Cancel
 
     subject_data = data[data[:, 2] == subject_name]
     if subject_data.size == 0:
@@ -94,6 +96,32 @@ def statistics_by_class(data):
     # ... (thêm kết quả phân loại điểm nếu cần) ...
 
     messagebox.showinfo("Kết quả", result)
+
+
+def create_report(data):
+    """Tạo báo cáo về thông tin sinh viên và điểm học."""
+
+    # Tạo DataFrame từ dữ liệu
+    df = pd.DataFrame(data)
+
+    # Chọn tên cột cho DataFrame (nếu cần)
+    df.columns = ['ID', 'Họ và tên', 'Môn học', 'Điểm']  # Thay đổi tên cột phù hợp với dữ liệu của bạn
+
+    # Tính trung bình cộng điểm cho từng sinh viên
+    student_ids = np.unique(data[:, 0])
+    for student_id in student_ids:
+        average = calculate_average(data, student_id)
+        # Tách thông tin trung bình cộng điểm ra khỏi chuỗi
+        avg_str = average.split("là ")[1]
+        # Tạo một hàng mới cho DataFrame với thông tin trung bình cộng điểm
+        new_row = pd.DataFrame(
+            {'ID': [student_id], 'Họ và tên': ['Trung bình cộng điểm'], 'Môn học': ['Tổng'], 'Điểm': [avg_str]})
+        df = pd.concat([df, new_row], ignore_index=True)
+
+    # Lưu DataFrame vào file Excel
+    file_path_excel = 'report.xlsx'  # Đường dẫn đến file Excel mới
+    df.to_excel(file_path_excel, index=False)
+    messagebox.showinfo("Thông báo", f"Báo cáo đã được tạo tại {file_path_excel}")
 
 
 def main():
@@ -126,7 +154,9 @@ def main():
     subject_entry.pack(pady=5)
 
     tk.Button(root, text="Tìm kiếm", command=search_action).pack(pady=10)
-    tk.Button(root, text="Thống kê điểm theo lớp", command=lambda: statistics_by_class(data)).pack(pady=10) # Thêm nút bấm
+    tk.Button(root, text="Thống kê điểm theo lớp", command=lambda: statistics_by_class(data)).pack(
+        pady=10)  # Thêm nút bấm
+    tk.Button(root, text="Tạo báo cáo", command=lambda: create_report(data)).pack(pady=10)  # Thêm nút bấm
 
     root.mainloop()
 
