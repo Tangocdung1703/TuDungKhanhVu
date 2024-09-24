@@ -63,9 +63,6 @@ def create_input_fields():
       entry.grid(row=i, column=n, padx=5, pady=5)
       entries_B.append(entry)
 
-    label_eq = tk.Label(frame_inputs, text="=")
-    label_eq.grid(row=0, column=n - 1, padx=5, pady=5)
-
   except ValueError:
     messagebox.showerror("Lỗi", "Vui lòng nhập số phương trình hợp lệ")
 
@@ -95,5 +92,5 @@ frame_inputs.pack(padx=10, pady=10)
 btn_solve = tk.Button(root, text="Giải", command=solve_system)
 btn_solve.pack(padx=10, pady=10)
 
-# Chạy vòng lặp
+# Chạy vòng lặp giao diện
 root.mainloop()
