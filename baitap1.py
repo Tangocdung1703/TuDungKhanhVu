@@ -6,9 +6,19 @@ from tkinter import messagebox
 # Hàm giải hệ phương trình tuyến tính
 def giai_he_pt(A, B):
   try:
-    A_inv = np.linalg.inv(A)
-    X = np.dot(A_inv, B)
-    return X
+    rank_A = np.linalg.matrix_rank(A)
+    augmented_matrix = np.column_stack((A, B))  # Ma trận mở rộng
+    rank_augmented = np.linalg.matrix_rank(augmented_matrix)
+
+    if rank_A < rank_augmented:
+      return "Vô nghiệm"
+    elif rank_A == rank_augmented < len(A):
+      return "Vô số nghiệm"
+    else:
+      # Trường hợp nghiệm duy nhất
+      A_inv = np.linalg.inv(A)
+      X = np.dot(A_inv, B)
+      return X
   except np.linalg.LinAlgError:
     return None
 
@@ -28,8 +38,8 @@ def solve_system():
 
     # Giải hệ phương trình
     result = giai_he_pt(A, B)
-    if result is None:
-      messagebox.showerror("Lỗi", "Hệ phương trình không có nghiệm hoặc vô số nghiệm")
+    if isinstance(result, str):
+      messagebox.showerror("Kết quả", result)
     else:
       result_str = ', '.join([f"x{i + 1} = {result[i]:.2f}" for i in range(n)])
       messagebox.showinfo("Kết quả", f"Nghiệm của hệ là: {result_str}")
@@ -65,8 +75,6 @@ def create_input_fields():
 
   except ValueError:
     messagebox.showerror("Lỗi", "Vui lòng nhập số phương trình hợp lệ")
-
-
 # Tạo cửa sổ chính
 root = tk.Tk()
 root.title("Giải hệ phương trình tuyến tính")
