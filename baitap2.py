@@ -223,9 +223,9 @@ def tim_ma_tran_nghich_dao_handle():
     messagebox.showerror("Lỗi", "Vui lòng nhập số hợp lệ")
 
 # Hàm xử lý khi nhấn nút "Hạng"
-def tinh_hang_ma_tran_handle(entry_m=None):
+def tinh_hang_ma_tran_handle():
   try:
-    m = int(entry_m.get())  # số hàng ma trận
+    m = int(entry_n.get())  # số hàng ma trận
     n = int(entry_n.get())  # số cột ma trận
     A = np.zeros((m, n))  # ma trận 
 
@@ -307,13 +307,16 @@ def create_input_fields_matrix():
   except ValueError:
     messagebox.showerror("Lỗi", "Vui lòng nhập số hợp lệ")
 
-# Tạo cửa sổ chính
+# --- Giao diện ---
 root = tk.Tk()
 root.title("Giải hệ phương trình tuyến tính và xử lý ma trận")
 
-# Frame cho nhập số phương trình và số ẩn
-frame_top = tk.Frame(root)
-frame_top.pack(padx=10, pady=10)
+# --- Frame cho hệ phương trình ---
+frame_he_pt = tk.LabelFrame(root, text=" Hệ phương trình ", padx=10, pady=10)
+frame_he_pt.pack(pady=10, fill="both", expand="yes")
+
+frame_top = tk.Frame(frame_he_pt)
+frame_top.pack(pady=5)
 
 label_n = tk.Label(frame_top, text="Số phương trình và số ẩn:")
 label_n.pack(side=tk.LEFT)
@@ -324,76 +327,74 @@ entry_n.pack(side=tk.LEFT, padx=5)
 btn_create_fields = tk.Button(frame_top, text="Tạo", command=create_input_fields)
 btn_create_fields.pack(side=tk.LEFT, padx=5)
 
-# Frame cho các ô nhập hệ số và hằng số
-frame_inputs = tk.Frame(root)
-frame_inputs.pack(padx=10, pady=10)
+frame_inputs = tk.Frame(frame_he_pt)
+frame_inputs.pack(pady=5)
 
-# Nút giải hệ phương trình
-btn_solve = tk.Button(root, text="Giải", command=solve_system)
-btn_solve.pack(padx=10, pady=10)
+btn_solve = tk.Button(frame_he_pt, text="Giải", command=solve_system)
+btn_solve.pack(pady=5)
 
-# Nút tìm ma trận nghịch đảo
-btn_inverse = tk.Button(root, text="Nghịch đảo", command=tim_ma_tran_nghich_dao_handle)
-btn_inverse.pack(padx=10, pady=10)
+# --- Frame cho ma trận ---
+frame_ma_tran = tk.LabelFrame(root, text=" Xử lý ma trận ", padx=10, pady=10)
+frame_ma_tran.pack(pady=10, fill="both", expand="yes")
 
-# Nút tính hạng ma trận
-btn_rank = tk.Button(root, text="Hạng", command=tinh_hang_ma_tran_handle)
-btn_rank.pack(padx=10, pady=10)
+# --- Frame cho kích thước ma trận ---
+frame_matrix_size = tk.Frame(frame_ma_tran)
+frame_matrix_size.pack(pady=5)
 
-# --- Frame cho nhập số hàng và số cột của ma trận ---
-frame_matrix_size = tk.Frame(root)
-frame_matrix_size.pack(padx=10, pady=10)
-
+# Sử dụng grid layout cho frame_matrix_size
 label_m1 = tk.Label(frame_matrix_size, text="Số hàng ma trận 1:")
-label_m1.pack(side=tk.LEFT)
-
+label_m1.grid(row=0, column=0)
 entry_m1 = tk.Entry(frame_matrix_size, width=5)
-entry_m1.pack(side=tk.LEFT, padx=5)
+entry_m1.grid(row=0, column=1, padx=5)
 
 label_n1 = tk.Label(frame_matrix_size, text="Số cột ma trận 1:")
-label_n1.pack(side=tk.LEFT)
-
+label_n1.grid(row=0, column=2)
 entry_n1 = tk.Entry(frame_matrix_size, width=5)
-entry_n1.pack(side=tk.LEFT, padx=5)
+entry_n1.grid(row=0, column=3, padx=5)
 
 label_m2 = tk.Label(frame_matrix_size, text="Số hàng ma trận 2:")
-label_m2.pack(side=tk.LEFT)
-
+label_m2.grid(row=1, column=0)
 entry_m2 = tk.Entry(frame_matrix_size, width=5)
-entry_m2.pack(side=tk.LEFT, padx=5)
+entry_m2.grid(row=1, column=1, padx=5)
 
 label_n2 = tk.Label(frame_matrix_size, text="Số cột ma trận 2:")
-label_n2.pack(side=tk.LEFT)
-
+label_n2.grid(row=1, column=2)
 entry_n2 = tk.Entry(frame_matrix_size, width=5)
-entry_n2.pack(side=tk.LEFT, padx=5)
+entry_n2.grid(row=1, column=3, padx=5)
 
 btn_create_fields_matrix = tk.Button(frame_matrix_size, text="Tạo", command=create_input_fields_matrix)
-btn_create_fields_matrix.pack(side=tk.LEFT, padx=5)
+btn_create_fields_matrix.grid(row=0, column=4, rowspan=2, padx=10)
 
-# --- Frame cho nhập ma trận 1 ---
-frame_inputs_matrix1 = tk.Frame(root)
-frame_inputs_matrix1.pack(padx=10, pady=10)
+# --- Frame cho ma trận 1 & 2 ---
+frame_input_matrices = tk.Frame(frame_ma_tran)
+frame_input_matrices.pack(pady=5)
 
-# --- Frame cho nhập ma trận 2 ---
-frame_inputs_matrix2 = tk.Frame(root)
-frame_inputs_matrix2.pack(padx=10, pady=10)
+frame_inputs_matrix1 = tk.Frame(frame_input_matrices)
+frame_inputs_matrix1.pack(side=tk.LEFT, padx=10)
 
-# Nút cộng hai ma trận
-btn_cong = tk.Button(root, text="Cộng", command=cong_ma_tran_handle)
-btn_cong.pack(padx=10, pady=10)
+frame_inputs_matrix2 = tk.Frame(frame_input_matrices)
+frame_inputs_matrix2.pack(side=tk.LEFT, padx=10)
 
-# Nút trừ hai ma trận
-btn_tru = tk.Button(root, text="Trừ", command=tru_ma_tran_handle)
-btn_tru.pack(padx=10, pady=10)
+# --- Frame cho các nút xử lý ma trận ---
+frame_matrix_btns = tk.Frame(frame_ma_tran)
+frame_matrix_btns.pack(pady=5)
 
-# Nút nhân hai ma trận
-btn_nhan = tk.Button(root, text="Nhân", command=nhan_ma_tran_handle)
-btn_nhan.pack(padx=10, pady=10)
+btn_cong = tk.Button(frame_matrix_btns, text="Cộng", command=cong_ma_tran_handle)
+btn_cong.pack(side=tk.LEFT, padx=5)
 
-# Nút chia hai ma trận
-btn_chia = tk.Button(root, text="Chia", command=chia_ma_tran_handle)
-btn_chia.pack(padx=10, pady=10)
+btn_tru = tk.Button(frame_matrix_btns, text="Trừ", command=tru_ma_tran_handle)
+btn_tru.pack(side=tk.LEFT, padx=5)
 
-# Chạy vòng lặp giao diện
+btn_nhan = tk.Button(frame_matrix_btns, text="Nhân", command=nhan_ma_tran_handle)
+btn_nhan.pack(side=tk.LEFT, padx=5)
+
+btn_chia = tk.Button(frame_matrix_btns, text="Chia", command=chia_ma_tran_handle)
+btn_chia.pack(side=tk.LEFT, padx=5)
+
+btn_inverse = tk.Button(frame_matrix_btns, text="Nghịch đảo", command=tim_ma_tran_nghich_dao_handle)
+btn_inverse.pack(side=tk.LEFT, padx=5)
+
+btn_rank = tk.Button(frame_matrix_btns, text="Hạng", command=tinh_hang_ma_tran_handle)
+btn_rank.pack(side=tk.LEFT, padx=5)
+
 root.mainloop()
