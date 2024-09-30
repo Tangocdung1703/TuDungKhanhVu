@@ -4,15 +4,15 @@ from tkinter import messagebox
 
 # Hàm giải hệ phương trình tuyến tính (đã sửa đổi)
 def giai_he_pt(A, B):
-  try:
-    A_inv = np.linalg.inv(A)
-    X = np.dot(A_inv, B)
-    return X
-  except np.linalg.LinAlgError:
-    if np.linalg.matrix_rank(A) < np.linalg.matrix_rank(np.column_stack((A, B))):
-      return "Vô nghiệm"  # Hệ phương trình vô nghiệm
-    else:
-      return "Vô số nghiệm"  # Hệ phương trình vô số nghiệm
+    try:
+        A_inv = np.linalg.inv(A)
+        X = np.dot(A_inv, B)
+        return X
+    except np.linalg.LinAlgError:
+        if np.linalg.matrix_rank(A) < np.linalg.matrix_rank(np.column_stack((A, B))):
+            return "Vô nghiệm"  # Hệ phương trình vô nghiệm
+        else:
+            return "Vô số nghiệm"  # Hệ phương trình vô số nghiệm
 
 # Hàm cộng hai ma trận
 def cong_ma_tran(A, B):
