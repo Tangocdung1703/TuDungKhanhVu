@@ -68,14 +68,14 @@ plt.xticks(rotation=45)
 plt.show()
 
 # Vẽ biểu đồ phân bố điểm A, B+ (Histogram)
-plt.figure(figsize=(12, 6))
-plt.hist(in_data[:, 4], bins=10, alpha=0.5, label='Điểm A', color='red')
-plt.hist(in_data[:, 5], bins=10, alpha=0.5, label='Điểm B+', color='blue')
-plt.xlabel("Số lượng sinh viên")
-plt.ylabel("Tần suất")
-plt.title("Phân bố điểm A và B+ của sinh viên")
-plt.legend()
-plt.show()
+#plt.figure(figsize=(12, 6))
+#plt.hist(in_data[:, 4], bins=10, alpha=0.5, label='Điểm A', color='red')
+#plt.hist(in_data[:, 5], bins=10, alpha=0.5, label='Điểm B+', color='blue')
+#plt.xlabel("Số lượng sinh viên")
+#plt.ylabel("Tần suất")
+#plt.title("Phân bố điểm A và B+ của sinh viên")
+#plt.legend()
+#plt.show()
 
 # Vẽ biểu đồ tổng hợp số lượng sinh viên đạt từng loại điểm
 categories = ["A", "B+", "B", "C+", "C", "D+", "D", "F"]
