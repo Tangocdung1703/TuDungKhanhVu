@@ -1,0 +1,1 @@
+print("Ứng dụng tách biên ảnh")
