@@ -21,7 +21,7 @@ class ImageProcessor:
         self.capture_button.pack(pady=5)
 
         self.filter_options = [
-            "Làm mờ",
+            "Xóa phông", # Thay đổi "Làm mờ" thành "Xóa phông"
             "Làm nét",
             "Ảnh đen trắng",
             "Xóa nhiễu",
@@ -104,8 +104,17 @@ class ImageProcessor:
 
     def apply_filter_to_image(self, img, filter_type):
         """Áp dụng bộ lọc lên ảnh."""
-        if filter_type == "Làm mờ":
-            return cv2.blur(img, (5, 5))
+        if filter_type == "Xóa phông": # Áp dụng thuật toán xóa phông
+            mask = np.zeros(img.shape[:2], np.uint8)
+            bgdModel = np.zeros((1, 65), np.float64)
+            fgdModel = np.zeros((1, 65), np.float64)
+            rect = (80, 80, img.shape[1] - 80, img.shape[0] - 80)
+            cv2.grabCut(img, mask, rect, bgdModel, fgdModel, 5, cv2.GC_INIT_WITH_RECT)
+            mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
+            blurred_background = cv2.GaussianBlur(img, (51, 51), 0)
+            final_image = blurred_background.copy()
+            final_image[mask2 == 1] = img[mask2 == 1]
+            return final_image
         elif filter_type == "Làm nét":
             kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
             return cv2.filter2D(img, -1, kernel)
