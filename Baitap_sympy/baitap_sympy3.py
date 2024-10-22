@@ -4,15 +4,14 @@ import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
-
 # --- Hàm xử lý ---
-def clear_output():
+def clear_output(output_frame):
     for widget in output_frame.winfo_children():
         widget.destroy()
 
 
 def solve_linear_equation():
-    clear_output()
+    clear_output(output_frame_linear)
     try:
         a = float(entry_a.get())
         b = float(entry_b.get())
@@ -26,14 +25,14 @@ def solve_linear_equation():
             result = f"Nghiệm của phương trình là x = {x}"
     except ValueError:
         result = "Đầu vào không hợp lệ. Vui lòng nhập số."
-    show_result(result)
+    show_result(output_frame_linear, result)
 
 
 def solve_quadratic_equation():
-    clear_output()
+    clear_output(output_frame_quadratic)
     try:
-        a = float(entry_a.get())
-        b = float(entry_b.get())
+        a = float(entry_a_q.get()) # Sử dụng entry_a_q thay vì entry_a
+        b = float(entry_b_q.get()) # Sử dụng entry_b_q thay vì entry_b
         c = float(entry_c.get())
         delta = b ** 2 - 4 * a * c
         if delta < 0:
@@ -47,11 +46,11 @@ def solve_quadratic_equation():
             result = f"Phương trình có 2 nghiệm phân biệt: x1 = {x1}, x2 = {x2}"
     except ValueError:
         result = "Đầu vào không hợp lệ. Vui lòng nhập số."
-    show_result(result)
+    show_result(output_frame_quadratic, result)
 
 
 def solve_linear_system():
-    clear_output()
+    clear_output(output_frame_system)
     try:
         a1 = float(entry_a1.get())
         b1 = float(entry_b1.get())
@@ -76,7 +75,7 @@ def solve_linear_system():
 
     except ValueError:
         result = "Đầu vào không hợp lệ. Vui lòng nhập số."
-    show_result(result)
+    show_result(output_frame_system, result)
 
 
 def create_matrix_entries():
@@ -85,7 +84,7 @@ def create_matrix_entries():
         rows = int(entry_rows.get())
         cols = int(entry_cols.get())
     except ValueError:
-        show_result("Kích thước ma trận không hợp lệ.")
+        show_result(output_frame_matrix, "Kích thước ma trận không hợp lệ.")
         return
 
     for widget in matrix_frame.winfo_children():
@@ -114,12 +113,12 @@ def get_matrix_from_entries():
             matrix.append(row)
         return np.array(matrix)
     except ValueError:
-        show_result("Giá trị trong ma trận không hợp lệ.")
+        show_result(output_frame_matrix, "Giá trị trong ma trận không hợp lệ.")
         return None
 
 
 def find_inverse_matrix():
-    clear_output()
+    clear_output(output_frame_matrix)
     matrix = get_matrix_from_entries()
     if matrix is not None:
         try:
@@ -127,11 +126,11 @@ def find_inverse_matrix():
             result = f"Ma trận nghịch đảo là:\n{inverse_matrix}"
         except np.linalg.LinAlgError:
             result = "Ma trận không khả nghịch"
-        show_result(result)
+        show_result(output_frame_matrix, result)
 
 
 def calculate_determinant():
-    clear_output()
+    clear_output(output_frame_matrix)
     matrix = get_matrix_from_entries()
     if matrix is not None:
         try:
@@ -139,107 +138,120 @@ def calculate_determinant():
             result = f"Định thức của ma trận là: {determinant}"
         except np.linalg.LinAlgError:
             result = "Không thể tính định thức của ma trận không vuông."
-        show_result(result)
+        show_result(output_frame_matrix, result)
 
 
-def show_result(result):
-    result_label = tk.Label(output_frame, text=result, font=("Arial", 14), wraplength=500)
+def show_result(parent, result):
+    result_label = tk.Label(parent, text=result, font=("Arial", 14), wraplength=500)
     result_label.pack(pady=10)
 
 
 # --- Giao diện đồ họa ---
 window = tk.Tk()
 window.title("Ứng dụng Hỗ trợ Đại số")
+window.geometry("600x400")  # Điều chỉnh kích thước cửa sổ
 window.configure(bg="lightblue")
 
-# --- Frame chính ---
-main_frame = tk.Frame(window, bg="lightblue")
-main_frame.pack(pady=20, padx=20)
+# --- Tạo Tab Control ---
+tab_control = ttk.Notebook(window)
 
-# --- Frame chứa các button ---
-button_frame = tk.Frame(main_frame, bg="lightblue")
-button_frame.grid(row=0, column=0, rowspan=6, padx=20, sticky="n")
+# --- Tạo các Tab ---
+tab_linear = ttk.Frame(tab_control)
+tab_quadratic = ttk.Frame(tab_control)
+tab_system = ttk.Frame(tab_control)
+tab_matrix = ttk.Frame(tab_control)
 
-# --- Các button chức năng ---
-btn_linear_eq = tk.Button(button_frame, text="Giải phương trình bậc nhất", command=solve_linear_equation, width=25)
-btn_linear_eq.grid(row=0, column=0, pady=5)
-btn_quadratic_eq = tk.Button(button_frame, text="Giải phương trình bậc hai", command=solve_quadratic_equation, width=25)
-btn_quadratic_eq.grid(row=1, column=0, pady=5)
-btn_linear_system = tk.Button(button_frame, text="Giải hệ phương trình", command=solve_linear_system, width=25)
-btn_linear_system.grid(row=2, column=0, pady=5)
-btn_inverse_matrix = tk.Button(button_frame, text="Tìm ma trận nghịch đảo", command=find_inverse_matrix, width=25)
-btn_inverse_matrix.grid(row=3, column=0, pady=5)
-btn_determinant = tk.Button(button_frame, text="Tính định thức ma trận", command=calculate_determinant, width=25)
-btn_determinant.grid(row=4, column=0, pady=5)
+tab_control.add(tab_linear, text='Phương trình bậc nhất')
+tab_control.add(tab_quadratic, text='Phương trình bậc hai')
+tab_control.add(tab_system, text='Hệ phương trình')
+tab_control.add(tab_matrix, text='Ma trận')
+tab_control.pack(expand=1, fill="both")
 
-# --- Frame chứa input ---
-input_frame = tk.Frame(main_frame, bg="lightblue")
-input_frame.grid(row=0, column=1, sticky="nw")
-
-# --- Input cho phương trình bậc nhất ---
-label_a = tk.Label(input_frame, text="Nhập a:", bg="lightblue")
+# --- Tab Phương trình bậc nhất ---
+label_a = tk.Label(tab_linear, text="Nhập a:", bg="lightblue")
 label_a.grid(row=0, column=0)
-entry_a = tk.Entry(input_frame)
+entry_a = tk.Entry(tab_linear)
 entry_a.grid(row=0, column=1)
-label_b = tk.Label(input_frame, text="Nhập b:", bg="lightblue")
+label_b = tk.Label(tab_linear, text="Nhập b:", bg="lightblue")
 label_b.grid(row=0, column=2)
-entry_b = tk.Entry(input_frame)
+entry_b = tk.Entry(tab_linear)
 entry_b.grid(row=0, column=3)
+btn_linear_eq = tk.Button(tab_linear, text="Giải phương trình", command=solve_linear_equation, width=25)
+btn_linear_eq.grid(row=1, column=0, columnspan=4)
+output_frame_linear = tk.Frame(tab_linear, bg="lightblue") # Tạo frame chứa kết quả
+output_frame_linear.grid(row=2, column=0, columnspan=5)
 
-# --- Input cho phương trình bậc hai ---
-label_c = tk.Label(input_frame, text="Nhập c:", bg="lightblue")
-label_c.grid(row=1, column=2)
-entry_c = tk.Entry(input_frame)
-entry_c.grid(row=1, column=3)
+# --- Tab Phương trình bậc hai ---
+label_a_q = tk.Label(tab_quadratic, text="Nhập a:", bg="lightblue")
+label_a_q.grid(row=0, column=0)
+entry_a_q = tk.Entry(tab_quadratic)
+entry_a_q.grid(row=0, column=1)
+label_b_q = tk.Label(tab_quadratic, text="Nhập b:", bg="lightblue")
+label_b_q.grid(row=0, column=2)
+entry_b_q = tk.Entry(tab_quadratic)
+entry_b_q.grid(row=0, column=3)
+label_c = tk.Label(tab_quadratic, text="Nhập c:", bg="lightblue")
+label_c.grid(row=1, column=0)
+entry_c = tk.Entry(tab_quadratic)
+entry_c.grid(row=1, column=1)
+btn_quadratic_eq = tk.Button(tab_quadratic, text="Giải phương trình", command=solve_quadratic_equation, width=25)
+btn_quadratic_eq.grid(row=2, column=0, columnspan=4)
+output_frame_quadratic = tk.Frame(tab_quadratic, bg="lightblue") # Tạo frame chứa kết quả
+output_frame_quadratic.grid(row=3, column=0, columnspan=5)
 
-# --- Input cho hệ phương trình ---
-label_a1 = tk.Label(input_frame, text="a1:", bg="lightblue")
-label_a1.grid(row=2, column=0)
-entry_a1 = tk.Entry(input_frame, width=5)
-entry_a1.grid(row=2, column=1)
-label_b1 = tk.Label(input_frame, text="b1:", bg="lightblue")
-label_b1.grid(row=2, column=2)
-entry_b1 = tk.Entry(input_frame, width=5)
-entry_b1.grid(row=2, column=3)
-label_c1 = tk.Label(input_frame, text="c1:", bg="lightblue")
-label_c1.grid(row=2, column=4)
-entry_c1 = tk.Entry(input_frame, width=5)
-entry_c1.grid(row=2, column=5)
+# --- Tab Hệ phương trình ---
+label_a1 = tk.Label(tab_system, text="a1:", bg="lightblue")
+label_a1.grid(row=0, column=0)
+entry_a1 = tk.Entry(tab_system, width=5)
+entry_a1.grid(row=0, column=1)
+label_b1 = tk.Label(tab_system, text="b1:", bg="lightblue")
+label_b1.grid(row=0, column=2)
+entry_b1 = tk.Entry(tab_system, width=5)
+entry_b1.grid(row=0, column=3)
+label_c1 = tk.Label(tab_system, text="c1:", bg="lightblue")
+label_c1.grid(row=0, column=4)
+entry_c1 = tk.Entry(tab_system, width=5)
+entry_c1.grid(row=0, column=5)
 
-label_a2 = tk.Label(input_frame, text="a2:", bg="lightblue")
-label_a2.grid(row=3, column=0)
-entry_a2 = tk.Entry(input_frame, width=5)
-entry_a2.grid(row=3, column=1)
-label_b2 = tk.Label(input_frame, text="b2:", bg="lightblue")
-label_b2.grid(row=3, column=2)
-entry_b2 = tk.Entry(input_frame, width=5)
-entry_b2.grid(row=3, column=3)
-label_c2 = tk.Label(input_frame, text="c2:", bg="lightblue")
-label_c2.grid(row=3, column=4)
-entry_c2 = tk.Entry(input_frame, width=5)
-entry_c2.grid(row=3, column=5)
+label_a2 = tk.Label(tab_system, text="a2:", bg="lightblue")
+label_a2.grid(row=1, column=0)
+entry_a2 = tk.Entry(tab_system, width=5)
+entry_a2.grid(row=1, column=1)
+label_b2 = tk.Label(tab_system, text="b2:", bg="lightblue")
+label_b2.grid(row=1, column=2)
+entry_b2 = tk.Entry(tab_system, width=5)
+entry_b2.grid(row=1, column=3)
+label_c2 = tk.Label(tab_system, text="c2:", bg="lightblue")
+label_c2.grid(row=1, column=4)
+entry_c2 = tk.Entry(tab_system, width=5)
+entry_c2.grid(row=1, column=5)
+btn_linear_system = tk.Button(tab_system, text="Giải hệ phương trình", command=solve_linear_system, width=25)
+btn_linear_system.grid(row=2, column=0, columnspan=6)
+output_frame_system = tk.Frame(tab_system, bg="lightblue") # Tạo frame chứa kết quả
+output_frame_system.grid(row=3, column=0, columnspan=6)
 
-# --- Khung nhập ma trận ---
-matrix_input_frame = tk.Frame(main_frame, bg="lightblue")
-matrix_input_frame.grid(row=4, column=1, sticky="nw")
-
-label_rows = tk.Label(matrix_input_frame, text="Số hàng:", bg="lightblue")
+# --- Tab Ma trận ---
+label_rows = tk.Label(tab_matrix, text="Số hàng:", bg="lightblue")
 label_rows.grid(row=0, column=0)
-entry_rows = tk.Entry(matrix_input_frame, width=5)
+entry_rows = tk.Entry(tab_matrix, width=5)
 entry_rows.grid(row=0, column=1)
-label_cols = tk.Label(matrix_input_frame, text="Số cột:", bg="lightblue")
+label_cols = tk.Label(tab_matrix, text="Số cột:", bg="lightblue")
 label_cols.grid(row=0, column=2)
-entry_cols = tk.Entry(matrix_input_frame, width=5)
+entry_cols = tk.Entry(tab_matrix, width=5)
 entry_cols.grid(row=0, column=3)
-create_matrix_button = tk.Button(matrix_input_frame, text="Tạo ma trận", command=create_matrix_entries)
+create_matrix_button = tk.Button(tab_matrix, text="Tạo ma trận", command=create_matrix_entries)
 create_matrix_button.grid(row=0, column=4)
 
-# --- Frame chứa các phần tử ma trận ---
-matrix_frame = tk.Frame(main_frame, bg="lightblue")
-matrix_frame.grid(row=5, column=1, sticky="nw")
+# --- Khung chứa các phần tử ma trận (tạm thời để trống) ---
+matrix_frame = tk.Frame(tab_matrix, bg="lightblue")
+matrix_frame.grid(row=1, column=0, columnspan=5, sticky="nw")
 
-# --- Frame chứa output ---
-output_frame = tk.Frame(main_frame, bg="lightblue")
-output_frame.grid(row=6, column=0, columnspan=2, sticky="nw")
+# --- Các button chức năng cho ma trận ---
+btn_inverse_matrix = tk.Button(tab_matrix, text="Tìm ma trận nghịch đảo", command=find_inverse_matrix, width=25)
+btn_inverse_matrix.grid(row=2, column=0, columnspan=5)
+btn_determinant = tk.Button(tab_matrix, text="Tính định thức ma trận", command=calculate_determinant, width=25)
+btn_determinant.grid(row=3, column=0, columnspan=5)
+output_frame_matrix = tk.Frame(tab_matrix, bg="lightblue") # Tạo frame chứa kết quả
+output_frame_matrix.grid(row=4, column=0, columnspan=5)
 
 window.mainloop()

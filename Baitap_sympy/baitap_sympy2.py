@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 
-# -- Hàm xử lý cho các chức năng hình học --
-
 def tinh_khoang_cach():
     try:
         x1 = float(entry_x1.get())
@@ -111,6 +109,11 @@ entry_y2.grid(row=1, column=2, padx=5, pady=5)
 button_tinh_khoang_cach = ttk.Button(tab_khoang_cach, text="Tính khoảng cách", command=tinh_khoang_cach)
 button_tinh_khoang_cach.grid(row=2, column=0, columnspan=3, pady=10)
 
+import tkinter as tk
+from tkinter import ttk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 # --- Tab Đường thẳng ---
 tab_duong_thang = ttk.Frame(notebook)
 notebook.add(tab_duong_thang, text="Đường thẳng")
@@ -127,6 +130,16 @@ entry_b.grid(row=1, column=1, padx=5, pady=5)
 
 button_ve_duong_thang = ttk.Button(tab_duong_thang, text="Vẽ đường thẳng", command=ve_duong_thang)
 button_ve_duong_thang.grid(row=2, column=0, columnspan=2, pady=10)
+
+# --- Khung vẽ đồ thị ---
+fig, ax = plt.subplots()
+canvas = FigureCanvasTkAgg(fig, master=tab_duong_thang)
+canvas.get_tk_widget().grid(row=3, column=0, columnspan=2, sticky="nsew") # Sử dụng grid() và sticky="nsew"
+
+# Đảm bảo tab_duong_thang được cấu hình để co giãn theo canvas
+tab_duong_thang.rowconfigure(3, weight=1)
+tab_duong_thang.columnconfigure(0, weight=1)
+tab_duong_thang.columnconfigure(1, weight=1)
 
 # --- Tab Tam giác ---
 tab_tam_giac = ttk.Frame(notebook)
@@ -203,9 +216,5 @@ button_kiem_tra_tam_giac.grid(row=3, column=0, columnspan=2, pady=10)
 ket_qua_label = ttk.Label(window, text="", wraplength=300)
 ket_qua_label.pack(pady=10)
 
-# --- Khung vẽ đồ thị ---
-fig, ax = plt.subplots()
-canvas = FigureCanvasTkAgg(fig, master=window)
-canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
 window.mainloop()
