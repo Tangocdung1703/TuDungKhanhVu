@@ -89,7 +89,7 @@ def game_over_screen():
   screen.blit(text, text_rect)
 
   font = pygame.font.Font(None, 48)
-  text = font.render("Nhấn Enter để chơi lại", True, white)
+  text = font.render("Enter", True, white)
   text_rect = text.get_rect(center=(screen_width // 2, screen_height // 2 + 50))
   screen.blit(text, text_rect)
 
@@ -104,17 +104,16 @@ while running:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
-    if game_over:
-      if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_RETURN:
-          game_over = False
-
-          # Khởi tạo lại xe và chướng ngại vật
+    if event.type == pygame.KEYDOWN:
+      if event.key == pygame.K_RETURN:
+        if game_over:
+          # Khởi tạo lại xe và chướng ngại vật khi chơi lại
           car_x = screen_width // 2 - car_width // 2
           car_y = screen_height - car_height - 10
           obstacles.clear()
           create_obstacle()
           last_obstacle_time = pygame.time.get_ticks()
+          game_over = False
 
   # Di chuyển xe
   if not game_over:
@@ -143,16 +142,16 @@ while running:
     if check_collision(car_x, car_y):
       game_over = True
       game_over_screen()  # Gọi hàm hiển thị màn hình game over
+    else:
+      # Vẽ lên màn hình
+      screen.blit(background_image, (0, 0))  # Vẽ background
+      draw_car(car_x, car_y)
+      for obstacle in obstacles:
+        draw_obstacle(obstacle[0], obstacle[1])
 
-    # Vẽ lên màn hình
-    screen.blit(background_image, (0, 0))  # Vẽ background
-    draw_car(car_x, car_y)
-    for obstacle in obstacles:
-      draw_obstacle(obstacle[0], obstacle[1])
-
-    # Cập nhật màn hình
-    pygame.display.update()
-    clock.tick(fps)
+      # Cập nhật màn hình
+      pygame.display.update()
+      clock.tick(fps)
 
 # Thoát khỏi Pygame
 pygame.quit()
