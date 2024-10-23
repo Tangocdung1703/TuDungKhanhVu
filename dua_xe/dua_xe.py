@@ -89,7 +89,7 @@ def game_over_screen():
   screen.blit(text, text_rect)
 
   font = pygame.font.Font(None, 48)
-  text = font.render("Nhấn Enter để chơi lại", True, white)
+  text = font.render("Enter", True, white)
   text_rect = text.get_rect(center=(screen_width // 2, screen_height // 2 + 50))
   screen.blit(text, text_rect)
 
